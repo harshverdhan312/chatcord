@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ChatCord | Join Chat</title>
+    <style>
+      body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--light-color);
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .join-container {
+        width: 100%;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      }
+
+      .join-header {
+        background: var(--dark-color-a);
+        color: #fff;
+        padding: 30px 20px;
+        text-align: center;
+      }
+
+      .join-main {
+        padding: 30px 30px 40px;
+        background: var(--dark-color-b);
+        color: #fff;
+      }
+
+      .form-control {
+        margin-bottom: 25px;
+      }
+
+      .form-control label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .form-control input,
+      .form-control select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .btn {
+        display: inline-block;
+        width: 100%;
+        background: #fff;
+        color: var(--dark-color-a);
+        font-weight: bold;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+
+      .btn:hover {
+        background: var(--light-color);
+      }
+
+      @media (max-width: 500px) {
+        .join-container {
+          margin: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="join-container">
+      <header class="join-header">
+        <h1><i class="fas fa-comments"></i> Join ChatCord</h1>
+        <p>Pick a discussion topic and connect instantly.</p>
+      </header>
+      <main class="join-main">
+        <form action="chat.html">
+          <div class="form-control">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Enter your name..."
+              required
+            />
+          </div>
+
+          <div class="form-control">
+            <label for="room">Choose a Discussion Topic</label>
+            <select name="room" id="room" required>
+              <option value="">Loading topics...</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn">Join Chat</button>
+        </form>
+      </main>
+    </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", async () => {
+        const topicSelect = document.getElementById("room");
+        topicSelect.innerHTML = "";
+
+        try {
+          const res = await fetch("/api/topics");
+          const data = await res.json();
+
+          data.topics.forEach((topic) => {
+            const option = document.createElement("option");
+            option.value = topic;
+            option.textContent = topic;
+            topicSelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error("❌ Failed to load topics:", error);
+          const option = document.createElement("option");
+          option.value = "General";
+          option.textContent = "General (Fallback)";
+          topicSelect.appendChild(option);
+        }
+      });
+    </script>
+  </body>
+</html>
